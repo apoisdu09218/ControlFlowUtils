@@ -1408,8 +1408,8 @@ HOVER OVER THE INPUTS AND OUTPUTS FOR MORE INFO.
 									ret = re.sub(r'\],\s*\.\.\.\s*,(\s*\n\s*)\[', '],\\1[', ret)
 
 			if "%" in ret:
-				for key in VYKOSX_STORAGE_DATA.keys():
-					ret = ret.replace(f"%{key}%", str(repr(VYKOSX_STORAGE_DATA[key])).replace("'", ""))
+				for match in re.findall(r"%([^%]+)%", ret): # Collects all %VAR_NAME% matches for processing
+					ret = ret.replace(f"%{match}%", str(repr(VYKOSX_STORAGE_DATA.get(match, match))).replace("'", ""))
 					if "...," in ret: #Remove ellipsis from tensor representations as it causes issues with safe_eval
 						#Remove the ellipsis while preserving the alignment. The tensor repr is not valid for direct tensor manipulations but at least it won't error.									
 						ret = re.sub(r'\],\s*\.\.\.\s*,(\s*\n\s*)\[', '],\\1[', ret)
