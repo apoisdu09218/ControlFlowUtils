@@ -1408,17 +1408,11 @@ HOVER OVER THE INPUTS AND OUTPUTS FOR MORE INFO.
 									ret = re.sub(r'\],\s*\.\.\.\s*,(\s*\n\s*)\[', '],\\1[', ret)
 
 			if "%" in ret:
-
-				l_pos = ret.find("%")
-				if l_pos!= -1:
-					r_pos = ret.find("%",l_pos+1)
-					if r_pos!=-1:
-						name = ret[l_pos+1:r_pos]
-						if name in VYKOSX_STORAGE_DATA:
-							ret = ret.replace("%"+name+"%", str(repr( VYKOSX_STORAGE_DATA[name])).replace("'",""))
-							if "...," in ret: #Remove ellipsis from tensor representations as it causes issues with safe_eval
-								#Remove the ellipsis while preserving the alignment. The tensor repr is not valid for direct tensor manipulations but at least it won't error.									
-								ret = re.sub(r'\],\s*\.\.\.\s*,(\s*\n\s*)\[', '],\\1[', ret)
+				for key in VYKOSX_STORAGE_DATA.keys():
+					ret = ret.replace(f"%{key}%", str(repr(VYKOSX_STORAGE_DATA[key])).replace("'", ""))
+					if "...," in ret: #Remove ellipsis from tensor representations as it causes issues with safe_eval
+						#Remove the ellipsis while preserving the alignment. The tensor repr is not valid for direct tensor manipulations but at least it won't error.									
+						ret = re.sub(r'\],\s*\.\.\.\s*,(\s*\n\s*)\[', '],\\1[', ret)
 
 			#except Exception as x:
 				#raise Exception("AN UNEXPECTED ERROR OCURRED WHILE REPLACING VARIABLES:",x)
